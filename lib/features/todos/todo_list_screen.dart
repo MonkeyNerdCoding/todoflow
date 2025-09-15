@@ -975,117 +975,57 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
     }
   }
 
-  // Future<void> _bulkDelete() async {
-  //   final shouldDelete = await showDialog<bool>(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: const Text('Delete Todos'),
-  //       content: Text('Are you sure you want to delete ${_selectedTodos.length} todos?'),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.of(context).pop(false),
-  //           child: const Text('Cancel'),
-  //         ),
-  //         ElevatedButton(
-  //           onPressed: () => Navigator.of(context).pop(true),
-  //           style: ElevatedButton.styleFrom(
-  //             backgroundColor: Theme.of(context).colorScheme.error,
-  //           ),
-  //           child: const Text('Delete'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-    
-  //   if (shouldDelete == true) {
-  //     try {
-  //       for (final todoId in _selectedTodos) {
-  //         await ref.read(todoNotifierProvider.notifier).deleteTodo(todoId);
-  //       }
-  //       setState(() {
-  //         _selectedTodos.clear();
-  //         _isMultiSelectMode = false;
-  //       });
-        
-  //       if (mounted) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text('Todos deleted successfully!')),
-  //         );
-  //       }
-  //     } catch (e) {
-  //       if (mounted) {
-  //         HapticFeedback.heavyImpact();
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(
-  //             content: Text('Error deleting todos: $e'),
-  //             backgroundColor: Theme.of(context).colorScheme.error,
-  //           ),
-  //         );
-  //       }
-  //     }
-  //   }
-  // }
   Future<void> _bulkDelete() async {
-  final confirm = await _showDeleteConfirmationDialog();
-
-  if (confirm != true) return;
-
-  try {
-    await Future.wait(
-      _selectedTodos.map(
-        (id) => ref.read(todoNotifierProvider.notifier).deleteTodo(id),
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Todos'),
+        content: Text('Are you sure you want to delete ${_selectedTodos.length} todos?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
-
-    if (!mounted) return;
-
-    setState(() {
-      _selectedTodos.clear();
-      _isMultiSelectMode = false;
-    });
-
-    _showSnackBar('Deleted ${_selectedTodos.length} todos successfully!');
-  } catch (error) {
-    if (mounted) {
-      HapticFeedback.heavyImpact();
-      _showSnackBar(
-        'Failed to delete todos: $error',
-        isError: true,
-      );
+    
+    if (shouldDelete == true) {
+      try {
+        for (final todoId in _selectedTodos) {
+          await ref.read(todoNotifierProvider.notifier).deleteTodo(todoId);
+        }
+        setState(() {
+          _selectedTodos.clear();
+          _isMultiSelectMode = false;
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Todos deleted successfully!')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          HapticFeedback.heavyImpact();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error deleting todos: $e'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      }
     }
   }
-}
-
-Future<bool?> _showDeleteConfirmationDialog() {
-  return showDialog<bool>(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      title: const Text('Confirm Deletion'),
-      content: Text('Delete ${_selectedTodos.length} selected todos?'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(ctx).pop(false),
-          child: const Text('No'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(ctx).pop(true),
-          child: const Text('Yes'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _showSnackBar(String message, {bool isError = false}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      backgroundColor:
-          isError ? Theme.of(context).colorScheme.error : null,
-    ),
-  );
-}
-
+  
 
   // Filter dialog removed
 }
