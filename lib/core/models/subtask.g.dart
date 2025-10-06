@@ -13,17 +13,17 @@ _$SubtaskImpl _$$SubtaskImplFromJson(Map<String, dynamic> json) =>
       parentTodoId: json['parentTodoId'] as String,
       isCompleted: json['isCompleted'] as bool? ?? false,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      completedAt: json['completedAt'] == null
-          ? null
-          : DateTime.parse(json['completedAt'] as String),
+      completedAt: json['completedAt'] != null
+          ? DateTime.tryParse(json['completedAt'] as String)
+          : null,
     );
 
-Map<String, dynamic> _$$SubtaskImplToJson(_$SubtaskImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$SubtaskImplToJson(_$SubtaskImpl instance) => {
       'id': instance.id,
       'title': instance.title,
       'parentTodoId': instance.parentTodoId,
       'isCompleted': instance.isCompleted,
       'createdAt': instance.createdAt.toIso8601String(),
-      'completedAt': instance.completedAt?.toIso8601String(),
+      if (instance.completedAt != null)
+        'completedAt': instance.completedAt!.toIso8601String(),
     };

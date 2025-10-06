@@ -6,7 +6,7 @@ enum Priority {
   medium,
   high;
 
-  // Display names
+  /// Display name for each priority level
   String get displayName {
     switch (this) {
       case Priority.low:
@@ -18,19 +18,19 @@ enum Priority {
     }
   }
 
-  // Priority colors
+  /// Corresponding color for each priority level
   Color get color {
     switch (this) {
       case Priority.low:
-  return AppConstants.priorityLowColor;
+        return AppConstants.priorityLowColor;
       case Priority.medium:
-  return AppConstants.priorityMediumColor;
+        return AppConstants.priorityMediumColor;
       case Priority.high:
-  return AppConstants.priorityHighColor;
+        return AppConstants.priorityHighColor;
     }
   }
 
-  // Priority icons
+  /// Icon that visually represents the priority
   IconData get icon {
     switch (this) {
       case Priority.low:
@@ -42,7 +42,7 @@ enum Priority {
     }
   }
 
-  // Priority order for sorting
+  /// Used to sort by priority level
   int get order {
     switch (this) {
       case Priority.low:
@@ -53,6 +53,21 @@ enum Priority {
         return 3;
     }
   }
+
+  /// Parse string (e.g., from JSON or API) to [Priority]
+  static Priority fromString(String value) {
+    switch (value.toLowerCase()) {
+      case 'low':
+        return Priority.low;
+      case 'medium':
+        return Priority.medium;
+      case 'high':
+        return Priority.high;
+      default:
+        throw ArgumentError('Invalid priority: $value');
+    }
+  }
+
+  /// Convert Priority to lowercase string for storage
+  String get toJson => name;
 }
-
-
