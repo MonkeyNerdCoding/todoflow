@@ -15,17 +15,16 @@ class Subtask with _$Subtask {
     DateTime? completedAt,
   }) = _Subtask;
 
-  factory Subtask.fromJson(Map<String, dynamic> json) =>
-      _$SubtaskFromJson(json);
+  factory Subtask.fromJson(Map<String, dynamic> json) => _$SubtaskFromJson(json);
 
-  /// Create a new Subtask with auto-generated ID and timestamp
+  // Factory constructor to create a new subtask with generated ID
   factory Subtask.create({
     required String title,
     required String parentTodoId,
   }) {
     return Subtask(
       id: const Uuid().v4(),
-      title: title.trim(),
+      title: title,
       parentTodoId: parentTodoId,
       isCompleted: false,
       createdAt: DateTime.now(),
@@ -33,32 +32,34 @@ class Subtask with _$Subtask {
   }
 }
 
+// Extension for Subtask utilities
 extension SubtaskExtension on Subtask {
-  /// Toggle completion status
-  Subtask toggleCompletion() => copyWith(
-        isCompleted: !isCompleted,
-        completedAt: !isCompleted ? DateTime.now() : null,
-      );
+  // Toggle completion status
+  Subtask toggleCompletion() {
+    return copyWith(
+      isCompleted: !isCompleted,
+      completedAt: !isCompleted ? DateTime.now() : null,
+    );
+  }
 
-  /// Update subtask title (automatically trims whitespace)
-  Subtask updateTitle(String newTitle) =>
-      copyWith(title: newTitle.trim());
+  // Update subtask title
+  Subtask updateTitle(String newTitle) {
+    return copyWith(title: newTitle);
+  }
 
-  /// Mark subtask as completed
-  Subtask markCompleted() => copyWith(
-        isCompleted: true,
-        completedAt: DateTime.now(),
-      );
+  // Mark as completed
+  Subtask markCompleted() {
+    return copyWith(
+      isCompleted: true,
+      completedAt: DateTime.now(),
+    );
+  }
 
-  /// Mark subtask as pending (not completed)
-  Subtask markPending() => copyWith(
-        isCompleted: false,
-        completedAt: null,
-      );
-
-  /// Check if the subtask is recently completed (within the last 24 hours)
-  bool get isRecentlyCompleted =>
-      isCompleted &&
-      completedAt != null &&
-      DateTime.now().difference(completedAt!).inHours < 24;
+  // Mark as pending
+  Subtask markPending() {
+    return copyWith(
+      isCompleted: false,
+      completedAt: null,
+    );
+  }
 }
