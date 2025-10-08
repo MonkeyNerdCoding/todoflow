@@ -1477,171 +1477,105 @@ class _CategoryDialogState extends State<_CategoryDialog> {
 // sửa code ở đây
   Widget _buildPreview() {
   final color = parseHexColor(_selectedColorCode, fallback: Theme.of(context).colorScheme.primary);
-  final iconData = _getIconData(_selectedIconName);
-  final name = _nameController.text.isEmpty ? 'Category Name' : _nameController.text;
-
-  return Padding(
-    padding: const EdgeInsets.all(AppConstants.spacingL),
-    child: DecoratedBox(
+    final iconData = _getIconData(_selectedIconName);
+    final name = _nameController.text.isEmpty ? 'Category Name' : _nameController.text;
+    
+    return Container(
+      padding: const EdgeInsets.all(AppConstants.spacingL),
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).colorScheme.outline),
         borderRadius: BorderRadius.circular(AppConstants.radiusS),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.spacingL),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildIconContainer(color, iconData),
-            const SizedBox(width: AppConstants.spacingL),
-            _buildTextColumn(name),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _buildIconContainer(Color color, IconData iconData) {
-  return Container(
-    width: 40,
-    height: 40,
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(AppConstants.radiusXl),
-    ),
-    child: Icon(
-      iconData,
-      color: Theme.of(context).colorScheme.onPrimary,
-      size: AppConstants.iconM,
-    ),
-  );
-}
-
-Widget _buildTextColumn(String name) {
-  return Expanded(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          name,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-        const SizedBox(height: AppConstants.spacingXs),
-        Text(
-          '0 todos • 0 completed',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-        ),
-      ],
-    ),
-  );
-}
-
-// sửa code ở đây
-  // void _saveCategory() {
-  //   if (!_formKey.currentState!.validate()) {
-  //     return;
-  //   }
-
-  //   final category = widget.category?.copyWith(
-  //     name: _nameController.text.trim(),
-  //     description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-  //     colorCode: _selectedColorCode,
-  //     iconName: _selectedIconName,
-  //   ) ?? Category.create(
-  //     name: _nameController.text.trim(),
-  //     description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-  //     colorCode: _selectedColorCode,
-  //     iconName: _selectedIconName,
-  //   );
-
-  //   widget.onSave(category);
-  //   Navigator.of(context).pop();
-  // }
-
-  // void _deleteCategory() async {
-  //   final confirmed = await showDialog<bool>(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: const Text('Delete Category'),
-  //       content: Text('Are you sure you want to delete "${widget.category!.name}"?'),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.of(context).pop(false),
-  //           child: const Text('Cancel'),
-  //         ),
-  //         FilledButton(
-  //           onPressed: () => Navigator.of(context).pop(true),
-  //           style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
-  //           child: const Text('Delete'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-
-  //   if (confirmed == true && mounted) {
-  //     Navigator.of(context).pop(); // Close the edit dialog
-  //     // The actual deletion will be handled by the parent
-  //   }
-  // }
-
-  /// Builds the category object for saving.
-Category _buildCategory() {
-  final name = _nameController.text.trim();
-  final description = _descriptionController.text.trim().isEmpty
-      ? null
-      : _descriptionController.text.trim();
-
-  return widget.category?.copyWith(
-        name: name,
-        description: description,
-        colorCode: _selectedColorCode,
-        iconName: _selectedIconName,
-      ) ??
-      Category.create(
-        name: name,
-        description: description,
-        colorCode: _selectedColorCode,
-        iconName: _selectedIconName,
-      );
-}
-
-  /// Saves the category after validation.
-  void _saveCategory() {
-    if (!_formKey.currentState!.validate()) return;
-
-    final category = _buildCategory();
-    widget.onSave(category);
-
-    if (mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-
-  /// Shows delete confirmation and handles deletion if confirmed.
-  Future<void> _deleteCategory() async {
-    final confirmed = await _showDeleteConfirmationDialog();
-
-    if (confirmed == true && mounted) {
-      Navigator.of(context).pop(); // Close the edit dialog
-      // Parent will handle actual deletion
-    }
-  }
-
-  /// Shows the delete confirmation dialog.
-  Future<bool?> _showDeleteConfirmationDialog() {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => _DeleteConfirmationDialog(
-        categoryName: widget.category!.name,
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+            ),
+            child: Icon(
+              iconData,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: AppConstants.iconM,
+            ),
+          ),
+          const SizedBox(width: AppConstants.spacingL),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: AppConstants.spacingXs),
+                Text(
+                  '0 todos • 0 completed',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+
+// sửa code ở đây
+  void _saveCategory() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final category = widget.category?.copyWith(
+      name: _nameController.text.trim(),
+      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+      colorCode: _selectedColorCode,
+      iconName: _selectedIconName,
+    ) ?? Category.create(
+      name: _nameController.text.trim(),
+      description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+      colorCode: _selectedColorCode,
+      iconName: _selectedIconName,
+    );
+
+    widget.onSave(category);
+    Navigator.of(context).pop();
+  }
+
+  void _deleteCategory() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Category'),
+        content: Text('Are you sure you want to delete "${widget.category!.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      Navigator.of(context).pop(); // Close the edit dialog
+      // The actual deletion will be handled by the parent
+    }
+  }
+
+
 
   IconData _getIconData(String iconName) {
     switch (iconName) {
