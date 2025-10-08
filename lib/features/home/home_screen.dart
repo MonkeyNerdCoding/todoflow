@@ -462,34 +462,93 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildCategoriesSection(BuildContext context, WidgetRef ref, [List<Category>? preSelectedCategories]) {
-    final categoriesAsync = preSelectedCategories != null
-        ? AsyncValue.data(preSelectedCategories)
-        : ref.watch(categoryNotifierProvider);
+  //sửa code tại đây
+  // Widget _buildCategoriesSection(BuildContext context, WidgetRef ref, [List<Category>? preSelectedCategories]) {
+  //   final categoriesAsync = preSelectedCategories != null
+  //       ? AsyncValue.data(preSelectedCategories)
+  //       : ref.watch(categoryNotifierProvider);
     
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Categories',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         'Categories',
+  //         style: Theme.of(context).textTheme.titleMedium?.copyWith(
+  //           fontWeight: FontWeight.w600,
+  //         ),
+  //       ),
+  //       SizedBox(height: AppConstants.spacingL),
+  //       categoriesAsync.when(
+  //         data: (categories) => _buildResponsiveCategoriesLayout(context, categories),
+  //         loading: () => _buildCategoriesLoadingSkeleton(context),
+  //         error: (error, stack) => SelectableText.rich(
+  //           TextSpan(
+  //             text: 'Error loading categories: ${error.toString()}',
+  //             style: TextStyle(color: Theme.of(context).colorScheme.error),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+  /// Builds the categories section with a title and content based on async state.
+Widget _buildCategoriesSection(
+  BuildContext context,
+  WidgetRef ref, [
+  List<Category>? preSelectedCategories,
+]) {
+  final categoriesState = preSelectedCategories != null
+      ? AsyncValue.data(preSelectedCategories)
+      : ref.watch(categoryNotifierProvider);
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildSectionTitle(context),
+      const SizedBox(height: AppConstants.spacingL),
+      _buildCategoriesContent(context, categoriesState),
+    ],
+  );
+}
+
+/// Builds the section title.
+Widget _buildSectionTitle(BuildContext context) {
+  return Text(
+    'Categories',
+    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
         ),
-        SizedBox(height: AppConstants.spacingL),
-        categoriesAsync.when(
-          data: (categories) => _buildResponsiveCategoriesLayout(context, categories),
-          loading: () => _buildCategoriesLoadingSkeleton(context),
-          error: (error, stack) => SelectableText.rich(
-            TextSpan(
-              text: 'Error loading categories: ${error.toString()}',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  );
+}
+
+/// Builds the content based on the async state of categories.
+Widget _buildCategoriesContent(BuildContext context, AsyncValue<List<Category>> categoriesState) {
+  return categoriesState.when(
+    data: (categories) => _buildCategories(context, categories),
+    loading: () => _buildLoading(context),
+    error: (error, stack) => _buildError(context, error),
+  );
+}
+
+/// Builds the categories layout when data is available.
+Widget _buildCategories(BuildContext context, List<Category> categories) {
+  return _buildResponsiveCategoriesLayout(context, categories);
+}
+
+/// Builds the loading skeleton when categories are loading.
+Widget _buildLoading(BuildContext context) {
+  return _buildCategoriesLoadingSkeleton(context);
+}
+
+/// Builds the error message when categories fail to load.
+Widget _buildError(BuildContext context, Object error) {
+  return SelectableText.rich(
+    TextSpan(
+      text: 'Error loading categories: ${error.toString()}',
+      style: TextStyle(color: Theme.of(context).colorScheme.error),
+    ),
+  );
+}
 
   Widget _buildResponsiveCategoriesLayout(BuildContext context, List<Category> categories) {
     final isMobile = AppSizing.isMobile(context);
