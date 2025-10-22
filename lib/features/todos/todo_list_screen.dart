@@ -71,13 +71,14 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
+    // đổi theme
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: _isMultiSelectMode ? _buildMultiSelectAppBar(context) : _buildTopAppBar(context),
       body: Column(
         children: [
           _buildFilterChips(context),
-          if (_isSearchExpanded) _buildSearchBar(context),
+          if (_isSearchExpanded) _buildSearchBar(context), // Search bar
           _buildSortSection(context),
           Expanded(child: _buildTodoList(context)),
         ],
@@ -228,8 +229,8 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingL, vertical: AppConstants.spacingS),
       child: Row(
         children: [
-          Expanded(
-            child: DropdownButtonFormField<String>(
+          Expanded( 
+            child: DropdownButtonFormField<String>( //Sort Section Due Date', 'Priority', 'Created', 'Alphabetical'
               initialValue: filterState.sortBy,
               decoration: const InputDecoration(
                 labelText: 'Sort by',
@@ -326,7 +327,7 @@ class _TodoListScreenState extends ConsumerState<TodoListScreen> {
         );
         return KeyedSubtree(
           key: ValueKey(todo.id),
-          child: _buildEnhancedTodoItem(context, todo, category),
+          child: _buildEnhancedTodoItem(context, todo, category), // Hiển thị danh sách Todo
         );
       },
     );

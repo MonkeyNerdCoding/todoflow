@@ -55,7 +55,7 @@ class TodoNotifier extends _$TodoNotifier {
         description: 'Submit the monthly progress report to management',
         categoryId: workCategory.id,
         priority: Priority.high,
-        dueDate: DateTime.now().subtract(const Duration(days: 2)), // Overdue
+        dueDate: DateTime.now().subtract(const Duration(days: 2)),
       ),
       Todo.create(
         title: 'Pay utility bills',
